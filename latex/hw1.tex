@@ -52,13 +52,15 @@ $$\frac{\partial J(w)}{\partial a_k^{(2)}}=\frac{\partial J(w)}{\partial h_k(x^{
 so that
 $$\nabla_{w^{(2)}_k}J(w)=\delta_k^{(2)}\textbf{z}$$
 Then, if we keep applying the chain rule like we did previously for $\nabla_{w^{(2)}_k}J(w)$, we'll get:
-$$\nabla_{w^{(1)}_k}J(w)=\left(\frac{\partial J(w)}{\partial a_j^{(1)}}\right)\left(\nabla_{w^{(1)}_k}a_j^{(1)}\right)$$
+$$\nabla_{w^{(1)}_j}J(w)=\left(\frac{\partial J(w)}{\partial a_j^{(1)}}\right)\left(\nabla_{w^{(1)}_k}a_j^{(1)}\right)$$
 where
 \begin{align*}
 \frac{\partial J(w)}{\partial a_j^{(1)}}&=\sum_{k=1}^K\left(\frac{\partial J(w)}{\partial a_k^{(2)}}\right)\left(\frac{\partial a_k^{(2)}}{\partial a_j^{(1)}}\right)\\
 &=\sum_{k=1}^K\delta_k^{(2)}\cdot w_{kj}^{(2)}\cdot g'(a_j^{(1)})\\
-&=
+&=\sum_{k=1}^K\delta_k^{(2)}\cdot w_{kj}^{(2)}\cdot \frac{a_j^{(1)}}{e^{a_j^{(1)}}+1} = \delta_j^{(1)}
 \end{align*}
+When we combine everything, we now have
+$$\nabla_{w^{(1)}_j}J(w)=\delta_j^{(1)}\textbf{x}$$
 \end{document}
 
 
