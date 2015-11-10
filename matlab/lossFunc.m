@@ -1,17 +1,20 @@
-function [ dw2, dw1 ] = gradNN( w1, w2, w1_0, w2_0, x, y, lambda )
-[ hstuff, z, a1, a2] = h(x,w1,w1_0,w2,w2_0);
-dJdh = -y'.*((hstuff).^(-1)) + (1-y)'.*((1-hstuff).^(-1)) + 2*lambda*normFunc(w1, w2);
-delta2 = dJdh.*a2.*(exp(a2) + 1).^(-1);
-dw2 = delta2*z';
-delta1 = (delta2'*w2).*(a1.*(exp(a1) + 1).^(-1))';
-dw1 = delta1'*x;
+function [ out ] = lossFunc( w1, w1_0, w2, w2_0, X, Y )
+
+out = 0;
+Kval = max(Y);
+
+for i = 1:size(X,1)
+    y = zeros(Kval);
+    y(Y(i,:)) = 1;
+    x = X(i,:);
+    for kthis = 1:Kval
+        hk = h(x, w1, w1_0, w2, w2_0);
+        out = out - y(kthis)*log(hk) - (1-y(kthis))*(1-log(hk));
+    end
+end
 end
 
-function [ out ] = normFunc (w1, w2)
-out = norm(w1, 'fro') + norm(w2, 'fro');
-end
-
-function [ Z, z, a1, a2 ] = h( X, W1, W1_0, W2, W2_0 )
+function [ Z, a1, a2 ] = h( X, W1, W1_0, W2, W2_0 )
 %h Implements a neural network
 %   X: input layer, d x 1
 %   W1: weights 1, m x d

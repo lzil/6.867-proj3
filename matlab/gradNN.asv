@@ -3,8 +3,11 @@ function [ dw2, dw1 ] = gradNN( w1, w2, w1_0, w2_0, x, y, lambda )
 dJdh = -y'.*((hstuff).^(-1)) + (1-y)'.*((1-hstuff).^(-1)) + 2*lambda*normFunc(w1, w2);
 delta2 = dJdh.*a2.*(exp(a2) + 1).^(-1);
 dw2 = delta2*z';
-delta1 = (delta2'*w2).*(a1.*(exp(a1) + 1).^(-1))';
-dw1 = delta1'*x;
+delta2'*w2
+(a1.*(exp(a1) + 1).^(-1))
+delta1 = (delta2'*w2)*(a1.*(exp(a1) + 1).^(-1))
+size(delta1)
+dw1 = delta1*x
 end
 
 function [ out ] = normFunc (w1, w2)
