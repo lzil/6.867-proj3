@@ -12,10 +12,10 @@ z = zeros(m, 1);
 for j = 1:m
     a = 0;
     for i = 1:d
-        a = a + W1(j, i) * X(i, 1);
+        a = a + W1(j, i) * X(i);
     end
-    a = a + W1_0(j, 1);
-    z(j, 1) = sigmoid(a);
+    a = a + W1_0(j);
+    z(j) = sigmoid(a);
 end
 
 K = length(W2_0);
@@ -23,9 +23,9 @@ Z = zeros(K, 1);
 for k = 1:K
     a = 0;
     for j = 1:m
-        a = a + W2(k, j) * z(j, 1);
+        a = a + W2(k, j) * z(j);
     end
-    a = a + W2_0(k, 1);
+    a = a + W2_0(k);
     Z(k, 1) = sigmoid(a);
 end
 
