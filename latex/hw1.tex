@@ -40,6 +40,25 @@ In this paper, we will consider a loss function in the form of a negative log li
 $$\ell(w) = \sum_{i=1}^N\sum_{k=1}^K\left[-y_k^{(1)}\log(h_k(x^{(i)},w))-(1-y_k^{(1)})\log(1-h_k(x^{(i)},w))\right]$$
 If we optimize this directly, however, we will often overfit to the training data (of which we have $n$ samples from $x^{(1)}$ to $x^{(n)}$ - we distinguish these from $x_i$, which are the features of one particular sample that we will consider at a time). Thus, we add a regularization term on the weights $w^{(1)}$ and $w^{(2)}$, so that we try to minimize:
 $$J(w) = \ell(w)+\lambda(||w^{(1)}||_F^2+||w^{(2)}||_F^2)$$
+To do this, we can use our gradient descent methods from previous examinations of regression and classification; in this scenario, we want $\nabla_{w_1}J(w)$ and $\nabla_{w_2}J(w)$, which we can calculate analytically. First we compute:
+$$\frac{\partial J(w)}{\partial h_k(x^{(i)},w)}=-\frac{y_k^{(1)}}{h_k(x^{(i)},w)}+\frac{1-y_k^{(1)}}{1-h_k(x^{(i)},w)}+2\lambda||w^{(1)}||$$
+From the lecture notes, we have an expression for $\nabla_{w^{(2)}_k}J(w)$:
+\begin{align*}
+\nabla_{w^{(2)}_k}J(w)&=\frac{\partial J(w)}{\partial h_k(x^{(i)},w)}(\tilde{g}'(a_k^{(2)}))\textbf{z}\\
+&=\frac{\partial J(w)}{\partial h_k(x^{(i)},w)}\frac{a_k^{(2)}}{e^{a_k^{(2)}}+1}\textbf{z}
+\end{align*}
+and this can be implemented with gradient descent and back-propagation to minimize the error. Similarly, we can calculate $\nabla_{w_1}J(w)$. First we let
+$$\frac{\partial J(w)}{\partial a_k^{(2)}}=\frac{\partial J(w)}{\partial h_k(x^{(i)},w)}\frac{a_k^{(2)}}{e^{a_k^{(2)}}+1}=\delta_k^{(2)}$$
+so that
+$$\nabla_{w^{(2)}_k}J(w)=\delta_k^{(2)}\textbf{z}$$
+Then, if we keep applying the chain rule like we did previously for $\nabla_{w^{(2)}_k}J(w)$, we'll get:
+$$\nabla_{w^{(1)}_k}J(w)=\left(\frac{\partial J(w)}{\partial a_j^{(1)}}\right)\left(\nabla_{w^{(1)}_k}a_j^{(1)}\right)$$
+where
+\begin{align*}
+\frac{\partial J(w)}{\partial a_j^{(1)}}&=\sum_{k=1}^K\left(\frac{\partial J(w)}{\partial a_k^{(2)}}\right)\left(\frac{\partial a_k^{(2)}}{\partial a_j^{(1)}}\right)\\
+&=\sum_{k=1}^K\delta_k^{(2)}\cdot w_{kj}^{(2)}\cdot g'(a_j^{(1)})\\
+&=
+\end{align*}
 \end{document}
 
 
