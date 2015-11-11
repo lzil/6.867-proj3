@@ -39,7 +39,7 @@ $$f_k = g(a_k^{(2)}) = \frac{1}{1 + e^{-a_k^{(2)}}}$$
 
 In this paper, we will consider a loss function in the form of a negative log likelihood, taking the form:
 $$\ell(w) = \frac{1}{N}\sum_{i=1}^N\sum_{k=1}^K\left[-y_k^{(i)}\log(h_k(x^{(i)},w))-(1-y_k^{(i)})\log(1-h_k(x^{(i)},w))\right]$$
-where $f_k=h_k$ and $y_k$ is a $K$-dimensional one-hot vector with all 0 values except for a 1 in the $k$th dimension. If we optimize this directly, however, we will often overfit to the training data (of which we have $n$ samples from $x^{(1)}$ to $x^{(n)}$ - we distinguish these from $x_i$, which are the features of one particular sample that we will consider at a time). Thus, we add a regularization term on the weights $w^{(1)}$ and $w^{(2)}$, so that we try to minimize:
+where $f_k=h_k$ and $y_k$ is a $K$-dimensional one-hot vector with all 0 values except for a 1 in the $k$th dimension. If we optimize this directly, however, we will often overfit to the training data (of which we have $n$ samples from $x^{(1)}$ to $x^{(n)}$ - we distinguish these from $x_i$, which are the features of one particular sample that we will consider at a time). Thus, we add a regularization term on the weights $w^{(1)}$ and $w^{(2)}$, so that we try to minize:
 $$J(w) = \ell(w)+\lambda(||w^{(1)}||_F^2+||w^{(2)}||_F^2)$$
 To do this, we can use our gradient descent methods from previous examinations of regression and classification; in this scenario, we want $\nabla_{w_1}J(w)$ and $\nabla_{w_2}J(w)$, which we can calculate analytically. First we compute:
 $$\frac{\partial J(w)}{\partial h_k(x^{(i)},w)}=-\frac{y_k^{(i)}}{h_k(x^{(i)},w)}+\frac{1-y_k^{(i)}}{1-h_k(x^{(i)},w)}+2\lambda(||w^{(1)}||+||w^{(2)}||)$$
@@ -67,11 +67,12 @@ We can now use these formulas to implement our gradient descent or stochastic gr
 \section{Applications}
 First, we can investigate the use of our neural network in classifying toy data. The toys are separated into three different classes, and we are given training, validation, and test data for our model. We use cross-validation to help us optimize the number of hidden nodes, and we also test both batch and stochastic gradient descent to help us find the optimal parameters. We can initialize our parameters with $w^{(1)}_{ij}$ and $w^{(2)}_{jk}$ set randomly between 0 and 1 for all $i,j,k$ and $M=1,2,5,10$. $d$ and $K$ are determined by the input vector and the number of ``groups'' we wish to classify into.\\
 
-We aggregate our results by cross-validation - this gives us more confidence that our answer is correct by utilizing as much of the data as we can to optimize our parameters and weight matrices for classification of the toy data. Our solutions vary between batch and stochastic gradient descent.
+We aggregate our results by cross-validation - this gives us more confidence that our answer is correct by utilizing as much of the data as we can to optimize our parameters and weight matrices for classification of the toy data. Our solutions vary between batch and stochastic gradient descent. The best value of $M$, the number of hidden layers, we obtained was $M=4$ with an accuracy of $99\%$ and the best value of $M$ we obtained with stochastic gradient descent as opposed to normal batch gradient descent was $M=3$. The best value of $\lambda$ was 0.\\
 
-In addition, we tested our model on real-life MNIST data, a well-known corpus of handwritten digits from 0-9 that are often used as a benchmark for classification algorithms. This dataset that we're working with, however, only includes points with classes 1 - 6. hmm
+In addition, we tested our model on real-life MNIST data, a well-known corpus of handwritten digits from 0-9 that are often used as a benchmark for classification algorithms. This dataset that we're working with, however, only includes points with classes 1 - 6. The whole process is the same as with the toy data, just that we're working with more parameters and many more dimensions. We varied the number of hidden nodes $M$ from 5 to 100, the tradeoff regularization parameter $\lambda$ from 0 to 1, the step size of the gradient descent between 0.0001 and 0.01, as well as experimented between normal gradient descent and stochastic gradient descent.
+
+Our choice of parameters ended up being fairly stable in producing large accuracies (around $90\%$, depending on the stochastic initial parameters) and matches - we tended to favor a value of $M$ around 25, $\lambda=0.03$, a step size of 0.005, and there was no noticeable difference between normal gradient descent and stochastic gradient descent (although SGD performed slightly better, and was significantly faster in runtime).
 \end{document}
-
 
 
 
