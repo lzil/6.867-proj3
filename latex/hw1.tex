@@ -1,4 +1,4 @@
-\documentclass[10pt,letterpaper]{article}
+\documentclass[11pt,letterpaper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \DeclareMathOperator{\sign}{sgn}
@@ -61,12 +61,15 @@ where
 &=\sum_{k=1}^K\delta_k^{(2)}\cdot w_{kj}^{(2)}\cdot \frac{a_j^{(1)}}{e^{a_j^{(1)}}+1} = \delta_j^{(1)}
 \end{align*}
 When we combine everything, we now have
-$$\nabla_{w^{(1)}_j}J(w)=\delta_j^{(1)}\textbf{x}$$.
-
-We can now use these formulas to implement our gradient descent or stochastic gradient descent based on our data and our choosing.
+$$\nabla_{w^{(1)}_j}J(w)=\delta_j^{(1)}\textbf{x}.$$
+We can now use these formulas to implement our gradient descent or stochastic gradient descent based on our data and our choosing. We tested our code and implementation with several sample values.
 
 \section{Applications}
-First, we can investigate the use of our neural network in classifying toy data. We use cross-validation to help us optimize the number of hidden nodes, and we also test both batch and stochastic gradient descent to help us find the optimal parameters. We can initialize our parameters with $w^{(1)}_{ij}$ and $w^{(2)}_{jk}$ equal to 1 for all $i,j,k$ and $M=10$. $d$ and $K$ are determined by the input vector and the number of ``groups'' we wish to classify into.
+First, we can investigate the use of our neural network in classifying toy data. The toys are separated into three different classes, and we are given training, validation, and test data for our model. We use cross-validation to help us optimize the number of hidden nodes, and we also test both batch and stochastic gradient descent to help us find the optimal parameters. We can initialize our parameters with $w^{(1)}_{ij}$ and $w^{(2)}_{jk}$ set randomly between 0 and 1 for all $i,j,k$ and $M=1,2,5,10$. $d$ and $K$ are determined by the input vector and the number of ``groups'' we wish to classify into.\\
+
+We aggregate our results by cross-validation - this gives us more confidence that our answer is correct by utilizing as much of the data as we can to optimize our parameters and weight matrices for classification of the toy data. Our solutions vary between batch and stochastic gradient descent.
+
+In addition, we tested our model on real-life MNIST data, a well-known corpus of handwritten digits from 0-9 that are often used as a benchmark for classification algorithms. This dataset that we're working with, however, only includes points with classes 1 - 6. hmm
 \end{document}
 
 
