@@ -1,20 +1,17 @@
-function [ dw2, dw1 ] = gradNN( w1, w2, w1_0, w2_0, x, y, lambda )
-[ hstuff, z, a1, a2] = h(x,w1,w1_0,w2,w2_0);
+function [ dw2, dw1 ] = gradNN( w1, w2, x, y, lambda )
+[ hstuff, z, a1, a2] = h(x,w1,w2);
 dJdh = -y'.*((hstuff).^(-1)) + (1-y)'.*((1-hstuff).^(-1)) + 2*lambda*normFunc(w1, w2);
 delta2 = dJdh.*a2.*(exp(a2) + 1).^(-1);
 dw2 = delta2*z';
-delta2'*w2
-(a1.*(exp(a1) + 1).^(-1))
-delta1 = (delta2'*w2)*(a1.*(exp(a1) + 1).^(-1))
-size(delta1)
-dw1 = delta1*x
+delta1 = (delta2'*w2).*(a1.*(exp(a1) + 1).^(-1))';
+dw1 = delta1'*x;
 end
 
 function [ out ] = normFunc (w1, w2)
 out = norm(w1, 'fro') + norm(w2, 'fro');
 end
 
-function [ Z, z, a1, a2 ] = h( X, W1, W1_0, W2, W2_0 )
+function [ Z, z, a1, a2 ] = h( X, W1, W2 )
 %h Implements a neural network
 %   X: input layer, d x 1
 %   W1: weights 1, m x d
@@ -23,7 +20,7 @@ function [ Z, z, a1, a2 ] = h( X, W1, W1_0, W2, W2_0 )
 %   W2_0: weight 2 bias, k x 1
 
 d = length(X);
-m = length(W1_0);
+m = size(W1,1);
 z = zeros(m, 1);
 a1 = zeros(m,1);
 for j = 1:m
@@ -31,12 +28,11 @@ for j = 1:m
     for i = 1:d
         a = a + W1(j, i) * X(i);
     end
-    a = a + W1_0(j);
     a1(j) = a;
     z(j) = sigmoid(a);
 end
 
-K = length(W2_0);
+K = size(W2,1);
 Z = zeros(K, 1);
 a2 = zeros(K, 1);
 for k = 1:K
@@ -44,7 +40,6 @@ for k = 1:K
     for j = 1:m
         a = a + W2(k, j) * z(j);
     end
-    a = a + W2_0(k);
     a2(k) = a;
     Z(k) = sigmoid(a);
 end

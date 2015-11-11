@@ -4,13 +4,14 @@ out = 0;
 Kval = max(Y);
 
 for i = 1:size(X,1)
-    y = zeros(Kval);
-    y(Y(i,:)) = 1;
+    y = zeros(Kval,1);
+    y(Y(i)) = 1;
     x = X(i,:);
+    hk = h(x, w1, w1_0, w2, w2_0);
     for kthis = 1:Kval
-        hk = h(x, w1, w1_0, w2, w2_0);
-        out = out - y(kthis)*log(hk) - (1-y(kthis))*(1-log(hk));
+        out = out - y(kthis).*log(hk(kthis)) - (1-y(kthis)).*(1-log(hk(kthis)));
     end
+out = out / size(X,1);
 end
 end
 
