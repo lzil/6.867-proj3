@@ -33,7 +33,7 @@ Figure 1 shows a basic neural network. The $x$ on the left is the input, with ea
 $$a_j^{(1)} = \sum_{i=1}^d w_{ji}^{(1)}x_i+w_{j0}^{(1)}$$
 $$z_j = g(a_j^{(1)}) = \frac{1}{1 + e^{-a_j^{(1)}}}$$
 
-To arrive at a simple one-hidden-layer neural network, we do this all over again, using our previous hidden layer node values (our $z_j$) instead of our inputs $x_i$ as the inputs to the second layer. The equations for this layer are analogous:
+To arrive at a simple one-hidden-layer neural network, we do this all over again, using our previous hidden layer node values (our $z_j$) instead of our inputs $x_i$ as the inputs to the second layer. Again, we add a bias feature. The equations for this layer are analogous:
 $$a_k^{(2)} = \sum_{j=1}^d w_{kj}^{(2)}x_j+w_{k0}^{(1)}$$
 $$f_k = g(a_k^{(2)}) = \frac{1}{1 + e^{-a_k^{(2)}}}$$
 
@@ -62,55 +62,61 @@ where
 \end{align*}
 When we combine everything, we now have
 $$\nabla_{w^{(1)}_j}J(w)=\delta_j^{(1)}\textbf{x}.$$
-We can now use these formulas to implement our gradient descent or stochastic gradient descent based on our data and our choosing. We tested our code and implementation with several sample values.
 
 \section{Applications}
-First, we can investigate the use of our neural network in classifying toy data. The toys are separated into three different classes, and we are given training, validation, and test data for our model. We use cross-validation to help us optimize the number of hidden nodes, and we also test both batch and stochastic gradient descent to help us find the optimal parameters. We can initialize our parameters with $w^{(1)}_{ij}$ and $w^{(2)}_{jk}$ set randomly between 0 and 1 for all $i,j,k$ and $M=1,2,5,10$. $d$ and $K$ are determined by the input vector and the number of ``groups'' we wish to classify into.\\
+First, we can investigate the use of our neural network in classifying toy data. The dataset is separated into three different classes, and we are given training, validation, and test data for our model. We use cross-validation to help us optimize the number of hidden nodes, and we also test both batch and stochastic gradient descent to help us find the optimal parameters. We can initialize our parameters with $w^{(1)}_{ij}$ and $w^{(2)}_{jk}$ set randomly between 0 and 1 for all $i,j,k$ and $M=1,2,5,10$. $d$ and $K$ are determined by the input vector and the number of ``groups'' we wish to classify into. Running our gradient descents to train the neural nets, we can then plot approximate classification boundaries that the neural net reveals, as shown in Figures 2 - 5.\\
+
+The best value of $M$, the number of hidden layers, we obtained was $M=5$ with an accuracy of $99\%$ for stochastic gradient descent. Results for the batch gradient descent matched, but the convergence was slower. The best value of $\lambda$ was 0 in both cases. We also tested our implementation on the second toy data set, which was very similar to the first - the only real difference was that the groups were less tightly clustered and it was not as easy to get near-perfect separation.\\
+
+In addition, we tested our model on real-life MNIST data, a well-known corpus of handwritten digits from 0-9 that are often used as a benchmark for classification algorithms. This dataset that we're working with, however, only includes points with classes 1 - 6. The whole process is the same as with the toy data, just that we're working with more parameters and many more dimensions. We varied the number of hidden nodes $M$ from 5 to 100, the tradeoff regularization parameter $\lambda$ between 0.001 and 0.005, the step size of the gradient descent between 0.1 and 0.5, as well as experimented between normal gradient descent and stochastic gradient descent. For the last two parameters, we quickly concluded that in all cases a step size of .2 was approximately optimal, and that stochastic gradient descent converged much more quickly, so we stuck with those parameters while varying the rest. Across this body of tests, we obtained the cross-validation accuracies described in Table 1.\\
+
+Our choice of parameters ended up being reasonably stable in producing passable accuracies (around $90\%$, depending on the stochastic initial parameters) and matches - we tended to favor a value of $M$ around 25, $\lambda=0.001$, and as mentioned previously, a step size of 0.2. Finally, there was no appreciable difference between the performance of batch gradient descent and stochastic gradient descent (although SGD converged significantly faster, so it is preferred).
+\pagebreak
+
 \begin{figure}[!htb]
-\minipage{0.4\textwidth}
+\minipage{0.49\textwidth}
   \includegraphics[width=\linewidth]{figures/batch_lambda0_toy.png}
   \caption{\texttt{toy\_1 lambda\_0 batch}}\label{fig:gradDifQ}
 \endminipage\hfill
-\minipage{0.4\textwidth}
+\minipage{0.49\textwidth}
   \includegraphics[width=\linewidth]{figures/batch_lambda1_toy.png}
-  \caption{\texttt{toy\_1 lambda\_1 batch}}\label{fig:gradDifN}
+  \caption{\texttt{toy\_1 lambda\_.05 batch}}\label{fig:gradDifN}
 \endminipage\hfill
-\minipage{0.4\textwidth}
+\minipage{0.49\textwidth}
   \includegraphics[width=\linewidth]{figures/sgd_lambda0_toy.png}
   \caption{\texttt{toy\_1 lambda\_0 sgd}}\label{fig:gradDifSs}
 \endminipage\hfill
-\minipage{0.4\textwidth}
+\minipage{0.49\textwidth}
   \includegraphics[width=\linewidth]{figures/sgd_lambda1_toy.png}
-  \caption{\texttt{toy\_1 lambda\_1 sgd}}\label{fig:gradDifS}
+  \caption{\texttt{toy\_1 lambda\_.05 sgd}}\label{fig:gradDifS}
 \endminipage
 \end{figure}
 
-We aggregate our results by cross-validation - this gives us more confidence that our answer is correct by utilizing as much of the data as we can to optimize our parameters and weight matrices for classification of the toy data. Our solutions vary between batch and stochastic gradient descent. The best value of $M$, the number of hidden layers, we obtained was $M=4$ with an accuracy of $99\%$ and the best value of $M$ we obtained with stochastic gradient descent as opposed to normal batch gradient descent was $M=3$. The best value of $\lambda$ was 0 in both cases.\\
-
-In addition, we tested our model on real-life MNIST data, a well-known corpus of handwritten digits from 0-9 that are often used as a benchmark for classification algorithms. This dataset that we're working with, however, only includes points with classes 1 - 6. The whole process is the same as with the toy data, just that we're working with more parameters and many more dimensions. We varied the number of hidden nodes $M$ from 5 to 100, the tradeoff regularization parameter $\lambda$ from 0 to 1, the step size of the gradient descent between 0.0001 and 0.01, as well as experimented between normal gradient descent and stochastic gradient descent.
 \begin{table}[!htb]
 \centering
-\caption{Varying $M$ vs $\lambda$ to calculate accuracy}
+\caption{Varying $M$ and $\lambda$ to calculate accuracy}
 \label{my-label}
-\begin{tabular}{llll}
- & M   & $\lambda$ & accuracy \\
- & 5   & .005    & 15.6\%   \\
- & 5   & .001    & 17.0\%   \\
- & 10  & .005    & 18.4\%   \\
- & 10  & .001    & 17.9\%   \\
- & 20  & .005    & 84.8\%   \\
- & 20  & .001    & 83.4\%   \\
- & 25  & .005    & 88.7\%   \\
- & 25  & .001    & 90.2\%   \\
- & 40  & .005    & 87.3\%   \\
- & 40  & .001    & 86.9\%   \\
- & 100 & .005    & 20.1\%   \\
- & 100 & .001    & 19.2\%  
+\begin{tabular}{rll}
+M   & $\lambda$ & cross-validation accuracy \\
+5   & .005    & 15.6\%   \\
+5   & .001    & 17.0\%   \\
+10  & .005    & 18.4\%   \\
+10  & .001    & 17.9\%   \\
+20  & .005    & 84.8\%   \\
+20  & .001    & 83.4\%   \\
+25  & .005    & 90.2\%   \\
+25  & .001    & 90.6\%   \\
+40  & .005    & 87.3\%   \\
+40  & .001    & 86.9\%   \\
+100 & .005    & 20.1\%   \\
+100 & .001    & 19.2\%  
 \end{tabular}
 \end{table}
-Our choice of parameters ended up being fairly stable in producing large accuracies (around $90\%$, depending on the stochastic initial parameters) and matches - we tended to favor a value of $M$ around 25, $\lambda=0.03$, a step size of 0.005, and there was no noticeable difference between normal gradient descent and stochastic gradient descent (although SGD performed slightly better, and was significantly faster in runtime).
 
-The choice of parameters is reasonable given the problem. The more data we have, in general the more complex the parameters will be in an attempt to fit all the data. However, this is balanced by the $\lambda$ that seeks to prevent overfitting, and so restricts the size of $M$ to be within a reasonable range.
+\pagebreak
+\pagebreak
+
+The choice of parameters is reasonable given the problem. The more data we have, in general the more complex the parameters will be in an attempt to fit all the data. However, this is balanced by the $\lambda$ that seeks to prevent overfitting via regularization of the neural net weights. Also, $M$ represents a lower-dimensional representation of the entire dataset, so it makes sense for $M$ to be some relatively small fraction of $n$, the number of training points. In this case, $n$ = 500, while our optimal $M$ was 25 - a very reasonable ratio for feature compression.
 \end{document}
 
 
