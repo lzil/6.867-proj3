@@ -7,10 +7,12 @@ Kval = size(Y,1);
 for i = 1:size(X,1)
     y = Y(:,i);
     x = X(i,:);
+    hk = h(x, w1, w1_0, w2, w2_0);
     for kthis = 1:Kval
         hk = h(x, w1, w2);
         out = out - y(kthis).*log(hk(kthis))' - (1-y(kthis)).*(1-log(hk(kthis)))';
     end
+out = out / size(X,1);
 end
 end
 
